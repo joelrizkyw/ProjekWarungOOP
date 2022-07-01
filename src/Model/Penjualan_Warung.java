@@ -207,29 +207,42 @@ public class Penjualan_Warung {
 		
 		if(!listData.isEmpty()) {
 			
-			System.out.println("\n==============");
-			System.out.println("List Penjualan");
-			System.out.println("==============");
-			
-			System.out.println("| No | Nama Produk | ID Pelanggan | Jumlah Produk | Total Harga |");
+			System.out.println("\n=========================================================================================");
+            System.out.println("List Penjualan");
+            System.out.println("=========================================================================================");
+            //            System.out.println("| No | Nama Produk | ID Pelanggan | Jumlah Produk | Total Harga |");
+            System.out.printf("| %-2s | %-30s | %-15s | %-12s | %-13s |","No","Nama Produk","ID Pelanggan","Jumlah Produk","Total Harga");
+            System.out.println("");
 			
 			int i = 0;
+			
+			double totalPendapatan = 0;
 			
 			for (Penjualan_Warung item : listData) {
 				
 				Produk_Warung dataProduk = Produk_Warung.getData(item.getId_produk());
 				
-				System.out.printf("| %d | %s | %s | %s | %s |\n", i + 1, dataProduk.getNama_produk(), item.getId_pelanggan(),
-					item.getJumlah_produk(), "Rp. " + (dataProduk.getHarga_produk() * item.getJumlah_produk()));
+				double harga = (dataProduk.getHarga_produk() * item.getJumlah_produk());
+				
+				System.out.printf("| %-2d | %-30s | %-15s | %-13s | %-13s |\n", i + 1, dataProduk.getNama_produk(), item.getId_pelanggan(),
+					item.getJumlah_produk(), "Rp. " + harga);
+				
+				totalPendapatan += harga;
 				
 				i++;
 			}
+			
+			System.out.println();
+			System.out.println("Total Pendapatan: Rp. " + totalPendapatan);
 		}
 		
-		System.out.println();
-		System.out.println("List Penjualan kosong...");
-		System.out.println("Tekan enter untuk lanjut..."); 
-		scan.nextLine();
+		else {
+			
+			System.out.println();
+			System.out.println("List Penjualan kosong...");
+			System.out.println("Tekan enter untuk lanjut..."); 
+			scan.nextLine();
+		}
 		
 		listData.clear();
 	}

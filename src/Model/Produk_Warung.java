@@ -319,9 +319,11 @@ public class Produk_Warung {
 		listProduk.clear();
 		listProduk = load_produk();
 		
-		System.out.println("Daftar Produk");
-	    System.out.println("===============================================================================");
-	    System.out.println("| No | ID produk | Nama Produk | Stok Produk | Harga Produk | Tanggal Expired |");
+		System.out.printf("===========================================================================================================\n");
+        System.out.printf("Daftar Produk\n");
+	    System.out.printf("===========================================================================================================\n");
+        System.out.printf("| %-2s | %-8s | %-35s | %-12s | %-14s | %-15s |", "No", "ID produk", "Nama Produk", "Stok Produk", "Harga Produk", "Tanggal Expired");
+        System.out.println("");
 		
 		if(listProduk.isEmpty())
 		{
@@ -336,7 +338,7 @@ public class Produk_Warung {
 			
 			for(Produk_Warung  produk : listProduk)
 			{
-				System.out.printf("| %d | %s | %s | %d | %s | %s | \n", i+1, produk.getId_produk(), produk.getNama_produk(), produk.getStok_produk(), "Rp. " +  produk.getHarga_produk(), produk.getTanggal_expired());
+				System.out.printf("| %2d | %-9s | %-35s | %-12d | %-14s | %-15s | \n", i+1, produk.getId_produk(), produk.getNama_produk(), produk.getStok_produk(), "Rp. " +  produk.getHarga_produk(), produk.getTanggal_expired());
 				i++;
 			}
 		}
@@ -406,6 +408,16 @@ public class Produk_Warung {
     	}
     	
     	return null;
+	}
+	
+	
+	public void ubahStokProduk(int jumlahProduk) {
+		
+		String query = String.format("UPDATE produk SET stok_produk = stok_produk - '%d' WHERE id_produk = '%s'", jumlahProduk, getId_produk());
+		
+		Connect con = Connect.getConnection();
+		
+		con.executeUpdate(query);
 	}
 	
 	

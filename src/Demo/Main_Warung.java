@@ -139,8 +139,9 @@ public class Main_Warung {
 		listProduk = Produk_Warung.load_produk();
 		
 		System.out.println("Daftar Produk");
-	    System.out.println("===============================================================================");
-	    System.out.println("| No | ID produk | Nama Produk | Stok Produk | Harga Produk | Tanggal Expired |");
+        System.out.println("=======================================================================================================");
+        System.out.printf("| %-2s | %-9s | %-32s | %-12s | %-14s | %-10s |\n","No", "ID produk" ,"Nama Produk" ,"Stok Produk","Harga Produk" ,"Tanggal Expired");
+        System.out.println("=======================================================================================================");
 		
 		if(listProduk.isEmpty())
 		{
@@ -155,7 +156,7 @@ public class Main_Warung {
 			
 			for(Produk_Warung  produk : listProduk)
 			{
-				System.out.printf("| %d | %s | %s | %d | %s | %s | \n", i+1, produk.getId_produk(), produk.getNama_produk(), produk.getStok_produk(), "Rp. " + produk.getHarga_produk(), produk.getTanggal_expired());
+				System.out.printf("| %-2d | %-9s | %-32s | %-12d | %-14s | %-15s | \n", i+1, produk.getId_produk(), produk.getNama_produk(), produk.getStok_produk(), "Rp. " + produk.getHarga_produk(), produk.getTanggal_expired());
 				i++;
 			}
 		}
@@ -180,15 +181,25 @@ public class Main_Warung {
     		
     		System.out.println();
     		
+    		// item produk yang terpilih
+    		produk = listProduk.get(noProduk - 1);
+    		
     		do {
     			
     			System.out.print("Jumlah produk? (min. 1): ");
     			stock = scan.nextInt();
     			scan.nextLine();
     			
-    		} while(stock <= 0);
+    			// cek jumlah produk apakah melebih stok produk
+    			if(stock > produk.getStok_produk()) {
+    				
+    				System.out.println();
+    				System.err.println("Jumlah produk melebihi stok produk !");
+    				System.out.println();
+    			}
+    			
+    		} while(stock <= 0 || stock > produk.getStok_produk());
     		
-    		produk = listProduk.get(noProduk - 1);
     		
     		System.out.print("Apa masih ingin menambah produk? (Ya/Tidak): ");
     		choice = scan.nextLine();
@@ -217,15 +228,16 @@ public class Main_Warung {
     		
     		// no, nama produk, jumlah produk, harga
     		System.out.println("Keranjang anda");
-    		System.out.println("==============");
-    		System.out.println("| No | Nama Produk | Jumlah Produk | Harga");
+            System.out.println("==========================================================================");
+            System.out.printf("| %-2s | %-32s | %-12s | %-14s | \n","No" ,"Nama Produk" ,"Jumlah Produk","Harga");
+            System.out.println("==========================================================================");
     		
     		for(int i = 0; i < listKeranjang.size(); i++) {
     			
     			Keranjang_Warung data = listKeranjang.get(i);
     			Produk_Warung produk = Produk_Warung.getData(data.getId_produk());
     			
-    			System.out.printf("| %d | %s | %d | %s |\n", i + 1, produk.getNama_produk(), data.getJumlah_produk(), "Rp. " + produk.getHarga_produk());
+    			System.out.printf("| %-2d | %-32s | %-13d | %-14s |\n", i + 1, produk.getNama_produk(), data.getJumlah_produk(), "Rp. " + produk.getHarga_produk());
     		}
     	}
     	
@@ -246,8 +258,9 @@ public class Main_Warung {
     		
     		// no, nama produk, jumlah produk, harga
     		System.out.println("Keranjang anda");
-    		System.out.println("==============");
-    		System.out.println("| No | Nama Produk | Jumlah Produk | Harga");
+    		System.out.println("==========================================================================");
+            System.out.printf("| %-2s | %-32s | %-12s | %-14s | \n","No" ,"Nama Produk" ,"Jumlah Produk","Harga");
+            System.out.println("==========================================================================");
     		
     		double totalHarga = 0;
     		
@@ -256,7 +269,7 @@ public class Main_Warung {
     			Keranjang_Warung data = listKeranjang.get(i);
     			Produk_Warung produk = Produk_Warung.getData(data.getId_produk());
     			
-    			System.out.printf("| %d | %s | %d | %s |\n", i + 1, produk.getNama_produk(), data.getJumlah_produk(), "Rp. " + produk.getHarga_produk());
+    			System.out.printf("| %-2d | %-32s | %-13d | %-14s |\n", i + 1, produk.getNama_produk(), data.getJumlah_produk(), "Rp. " + produk.getHarga_produk());
     			
     			totalHarga = totalHarga + (data.getJumlah_produk() * produk.getHarga_produk());
     		}
@@ -278,7 +291,7 @@ public class Main_Warung {
         		
         		if(money < totalHarga) {
         			
-        			System.out.println("Uang anda kurang !!!");
+        			System.err.println("Uang anda kurang !!!");
         		}
         		
         		else {
@@ -306,10 +319,17 @@ public class Main_Warung {
             	jual.setTgl_pembelian(formatter.format(date));
             		
             	jual.insert_penjualan();
+            	
+            	// ubah stok produk
+            	Produk_Warung produk = Produk_Warung.getData(keranjang.getId_produk());
+            	
+            	produk.ubahStokProduk(keranjang.getJumlah_produk());
             }
             
             System.out.println();
             System.out.println("Terima kasih sudah berbelanja !!!");
+            
+            listKeranjang.clear();
     	}
     }
     
